@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -43,6 +44,25 @@ public class PracticaCsV {
             
         }
         return filas;
+    }
+    
+    public String leerTexto() throws IOException{
+        if(!new File(RUTA).exists()) return "El archivo Datos.csv no existe todavía";
+       
+        StringBuilder sb = new StringBuilder();
+        List<String[]> filas = leerFilas();
+        sb.append("Total de registros: ").append(filas.size()).append("\n\n");
+        sb.append(String.format("%-15s %-6s %-15s%n", "NOMBRE", "EDAD", "CARRERA"));
+       
+        sb.append("-".repeat(40)).append("\n");
+       
+        for(String []fila : filas){
+            if(fila.length >= 3){
+                sb.append(String.format("%-15s %-6s %-15s%n", fila[0].trim(), fila[1].trim(), fila[2].trim()));
+            }
+        }
+       
+        return sb.toString();
     }
     
     
