@@ -7,11 +7,14 @@ package com.mycompany.practicacsv;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Scanner;
 
 /**
  *
@@ -21,6 +24,8 @@ public class PracticaCsV {
     
     private static final String RUTA = "Datos.csv";
     private static final String SEPARADOR = ",";
+    private static final String CABECERA = "nombre, edad, carrera";
+ 
     
     public static List<String[]> leerFilas() throws IOException{
         List<String[]> filas = new ArrayList<>();
@@ -65,7 +70,18 @@ public class PracticaCsV {
         return sb.toString();
     }
     
-    
+    public static void escribir(String nombre,int edad, String carrera)throws IOException{
+        boolean esNuevo =!new File(RUTA).exists();
+        
+        try(FileWriter fw=new FileWriter(RUTA, StandardCharsets.UTF_8, true);
+                PrintWriter pw=new PrintWriter(fw)){
+             if(esNuevo){
+                 pw.println(CABECERA);
+                 
+             }
+            pw.println(nombre + SEPARADOR + edad + SEPARADOR + carrera);
+        }
+    }
     
     
  
@@ -73,11 +89,40 @@ public class PracticaCsV {
       
         
         System.out.println("Voy A leer un csv. ");
+        
+        try{
+            Scanner sc = new Scanner(System.in);
+            int continuar;
+            do{
+                System.out.println("Ingrese nombre: ");
+                String nombre=sc.nextLine();
+                
+                System.out.println("Ingrese carrera: ");
+                String carrera=sc.nextLine();
+                
+                System.out.println("Ingrese edad: ");
+                int edad=sc.nextInt();
+                
+                sc.nextLine(); //pa limpiar el buffer
+               
+                escribir(nombre, edad, carrera);
+
+                System.out.println("Si desea terminar presione 1, sino presione 0 ");
+                 continuar = sc.nextInt();
+                
+                 sc.nextLine(); 
+            }while(continuar!=1);
+            
+        } catch(IOException ex){
+            System.out.println("Fallo" + ex.getMessage());
+        }
+        
         try{
             System.out.println(leerTexto());
+            
         } catch(IOException ex){
             System.out.println();
-            
+                                    
         }
     }
 }
